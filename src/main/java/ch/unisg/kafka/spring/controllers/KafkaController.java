@@ -1,6 +1,8 @@
 package ch.unisg.kafka.spring.controllers;
 
+import ch.unisg.kafka.spring.model.MetricSystem;
 import ch.unisg.kafka.spring.model.SuperHero;
+import ch.unisg.kafka.spring.service.ProducerMetricService;
 import ch.unisg.kafka.spring.service.ProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ public class KafkaController {
     @Autowired
     private ProducerService<SuperHero> producerService;
 
+    @Autowired
+    private ProducerMetricService<MetricSystem> producerMetricService;
 
     @GetMapping(value = "/publish")
     public String sendMessageToKafkaTopic(@RequestParam("message") String message) {
@@ -32,4 +36,22 @@ public class KafkaController {
 
         return map;
     }
+
+    @GetMapping(value = "/publish/metrics")
+    public String sendMetricApplicationToKafkaTopic(@RequestParam("application") String application) {
+        producerMetricService.sendMetricApplication(application);
+        return "Successfully published message..!";
+    }
+
+    @PostMapping(value = "/publish/metrics")
+    public Map<String, Object> sendMetricSystemObjectToKafkaTopic(@RequestBody MetricSystem metricSystem) {
+        producerMetricService.sendMetricSystem(metricSystem);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", "Successfully published System metrics..!");
+        map.put("payload", metricSystem);
+
+        return map;
+    }
+
 }

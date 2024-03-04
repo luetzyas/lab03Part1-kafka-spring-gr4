@@ -12,3 +12,5 @@ spring:
 
     topic: message-topic
     superhero-topic: superhero-topic
+    metric-application-topic: metric-application-topic
+    metric-system-topic: metric-system-topic
